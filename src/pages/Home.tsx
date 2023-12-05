@@ -61,7 +61,30 @@ const Home = () => {
 
   // Fonction pour valider/invalider une tâche
   const toggleCompleted = (taskId: number) => {
-    // Logique pour valider/invalider une tâche (à compléter)
+    const task = tasks.find((t) => t.id === taskId);
+    if (task) {
+      const updatedTask = { ...task, completed: !task.completed };
+      from(
+        fetch(`http://localhost:3000/tasks/${taskId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ completed: updatedTask.completed }),
+        })
+      )
+        .pipe(switchMap((response) => response.json()))
+        .subscribe({
+          next: () => {
+            setTasks((prevTasks) =>
+              prevTasks.map((t) => (t.id === taskId ? updatedTask : t))
+            );
+          },
+          error: (error) => {
+            console.error("Error toggling task completion:", error);
+          },
+        });
+    }
   };
 
   // Fonction pour supprimer une tâche
@@ -113,27 +136,18 @@ const Home = () => {
         <IonList>
           {tasks.map((task, index) => (
             <IonItemSliding key={index}>
-              <IonItemOptions side="start">
-                <IonItemOption
-                  onClick={() => toggleCompleted(task.id)}
-                  color="success"
-                >
-                  {task.completed ? "Invalider" : "Valider"}
-                </IonItemOption>
-              </IonItemOptions>
-              <IonItem>
-                <IonLabel className={task.completed ? "task-completed" : ""}>
-                  {task.text}
-                </IonLabel>
-              </IonItem>
-              <IonItemOptions side="end">
-                <IonItemOption
-                  onClick={() => deleteTask(task.id)}
-                  color="danger"
-                >
-                  Supprimer
-                </IonItemOption>
-              </IonItemOptions>
+              <IonLabel className={task.completed ? "task-completed" : ""}>
+                {task.text}
+              </IonLabel>
+              <IonButton
+                onClick={() => toggleCompleted(task.id)}
+                color="success"
+              >
+                {task.completed ? "Invalider" : "Valider"}
+              </IonButton>
+              <IonButton onClick={() => deleteTask(task.id)} color="danger">
+                Supprimer
+              </IonButton>
             </IonItemSliding>
           ))}
         </IonList>

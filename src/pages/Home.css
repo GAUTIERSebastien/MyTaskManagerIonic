@@ -9,6 +9,6 @@
 }
 
 .task-input .ion-item {
-  flex-grow: 1;
+  /* flex-grow: 1; */
   margin-right: 10px;
 }
