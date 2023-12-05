@@ -19,9 +19,9 @@ import { switchMap } from "rxjs/operators";
 import "./Home.css";
 
 const Home = () => {
-  const [tasks, setTasks] = useState<{ text: string; completed: boolean }[]>(
-    []
-  );
+  const [tasks, setTasks] = useState<
+    { id: number; text: string; completed: boolean }[]
+  >([]);
   const [newTask, setNewTask] = useState("");
 
   // Charger les tâches depuis le serveur lors du montage du composant
@@ -60,13 +60,36 @@ const Home = () => {
   };
 
   // Fonction pour valider/invalider une tâche
-  const toggleCompleted = (taskId) => {
+  const toggleCompleted = (taskId: number) => {
     // Logique pour valider/invalider une tâche (à compléter)
   };
 
   // Fonction pour supprimer une tâche
-  const deleteTask = (taskId) => {
-    // Logique pour supprimer une tâche (à compléter)
+  const deleteTask = (taskId: number) => {
+    from(
+      fetch(`http://localhost:3000/tasks/${taskId}`, {
+        method: "DELETE",
+      })
+    )
+      .pipe(
+        switchMap((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            // Gérer les erreurs HTTP ici
+            return Promise.reject("Failed to delete the task");
+          }
+        })
+      )
+      .subscribe({
+        next: () => {
+          // Mettre à jour l'état pour retirer la tâche supprimée
+          setTasks(tasks.filter((task) => task.id !== taskId));
+        },
+        error: (error) => {
+          console.error("Error deleting task:", error);
+        },
+      });
   };
 
   return (
@@ -82,7 +105,7 @@ const Home = () => {
             <IonInput
               value={newTask}
               placeholder="Ajouter une tâche"
-              onIonChange={(e) => setNewTask(e.detail.value)}
+              onIonChange={(e) => setNewTask(e.detail.value || "")}
             />
           </IonItem>
           <IonButton onClick={addTask}>Ajouter une tâche</IonButton>
