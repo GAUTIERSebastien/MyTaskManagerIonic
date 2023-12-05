@@ -1,0 +1,14 @@
+.task-completed {
+  text-decoration: line-through;
+}
+
+.task-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.task-input .ion-item {
+  flex-grow: 1;
+  margin-right: 10px;
+}
