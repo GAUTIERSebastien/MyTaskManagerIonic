@@ -1,22 +1,39 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
-import './Home.css';
+import React from "react";
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonInput,
+  IonButton,
+  IonItemSliding,
+  IonItemOption,
+  IonItemOptions,
+} from "@ionic/react";
 
 const Home: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Blank</IonTitle>
+          <IonTitle>Gestion de Tâches</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer />
+      <IonContent>
+        {/* Formulaire pour ajouter une tâche */}
+        <IonList>
+          <IonItem>
+            <IonLabel position="floating">Nouvelle Tâche</IonLabel>
+            <IonInput type="text"></IonInput>
+          </IonItem>
+          <IonButton expand="block">Ajouter</IonButton>
+        </IonList>
+        {/* Liste des tâches */}
+        {/* Chaque tâche sera un IonItemSliding pour permettre des actions comme valider/invalider et supprimer */}
       </IonContent>
     </IonPage>
   );
