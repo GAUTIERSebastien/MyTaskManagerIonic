@@ -1,19 +1,14 @@
 {
   "tasks": [
     {
-      "text": "fdsvd",
+      "text": "faire la lessive",
       "completed": false,
-      "id": 9
+      "id": 1
     },
     {
-      "text": "hsghdsf",
+      "text": "dedededed",
       "completed": false,
-      "id": 11
-    },
-    {
-      "text": "hdhgfn",
-      "completed": false,
-      "id": 12
+      "id": 2
     }
   ]
 }

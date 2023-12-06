@@ -11,108 +11,54 @@ import {
   IonInput,
   IonButton,
   IonItemSliding,
-  IonItemOption,
-  IonItemOptions,
 } from "@ionic/react";
-import { from } from "rxjs";
-import { switchMap } from "rxjs/operators";
 import "./Home.css";
+import {
+  fetchTasks,
+  addTask,
+  toggleTaskCompletion,
+  deleteTask,
+} from "../services/jsonService";
+import { TaskInterface } from "../interfaces/TaskInterface";
 
 const Home = () => {
-  const [tasks, setTasks] = useState<
-    { id: number; text: string; completed: boolean }[]
-  >([]);
+  const [tasks, setTasks] = useState<TaskInterface[]>([]);
   const [newTask, setNewTask] = useState("");
 
   // Charger les tâches depuis le serveur lors du montage du composant
   useEffect(() => {
-    const fetchTasks = () => {
-      fetch("http://localhost:3000/tasks")
-        .then((response) => response.json())
-        .then((data) => setTasks(data));
-    };
-
-    fetchTasks();
+    const subscription = fetchTasks().subscribe(setTasks);
+    return () => subscription.unsubscribe();
   }, []);
 
-  // Fonction pour ajouter une tâche
-  const addTask = () => {
+  const handleAddTask = () => {
     const task = { text: newTask, completed: false };
-    from(
-      fetch("http://localhost:3000/tasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(task),
-      })
-    )
-      .pipe(switchMap((response) => response.json()))
-      .subscribe({
-        next: (newTaskFromServer) => {
-          setTasks((prevTasks) => [...prevTasks, newTaskFromServer]);
-          setNewTask("");
-        },
-        error: (error) => {
-          console.error("Error adding task:", error);
-        },
-      });
+    addTask(task).subscribe({
+      next: (newTaskFromServer) => {
+        setTasks((prevTasks) => [...prevTasks, newTaskFromServer]);
+        setNewTask("");
+      },
+      error: (error) => console.error("Error adding task:", error),
+    });
   };
 
-  // Fonction pour valider/invalider une tâche
-  const toggleCompleted = (taskId: number) => {
+  const handleToggleCompleted = (taskId: number) => {
     const task = tasks.find((t) => t.id === taskId);
     if (task) {
-      const updatedTask = { ...task, completed: !task.completed };
-      from(
-        fetch(`http://localhost:3000/tasks/${taskId}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ completed: updatedTask.completed }),
-        })
-      )
-        .pipe(switchMap((response) => response.json()))
-        .subscribe({
-          next: () => {
-            setTasks((prevTasks) =>
-              prevTasks.map((t) => (t.id === taskId ? updatedTask : t))
-            );
-          },
-          error: (error) => {
-            console.error("Error toggling task completion:", error);
-          },
-        });
+      toggleTaskCompletion(taskId, !task.completed).subscribe(() => {
+        setTasks((prevTasks) =>
+          prevTasks.map((t) =>
+            t.id === taskId ? { ...t, completed: !t.completed } : t
+          )
+        );
+      });
     }
   };
 
-  // Fonction pour supprimer une tâche
-  const deleteTask = (taskId: number) => {
-    from(
-      fetch(`http://localhost:3000/tasks/${taskId}`, {
-        method: "DELETE",
-      })
-    )
-      .pipe(
-        switchMap((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            // Gérer les erreurs HTTP ici
-            return Promise.reject("Failed to delete the task");
-          }
-        })
-      )
-      .subscribe({
-        next: () => {
-          // Mettre à jour l'état pour retirer la tâche supprimée
-          setTasks(tasks.filter((task) => task.id !== taskId));
-        },
-        error: (error) => {
-          console.error("Error deleting task:", error);
-        },
-      });
+  const handleDeleteTask = (taskId: number) => {
+    deleteTask(taskId).subscribe(() => {
+      setTasks((prevTasks) => prevTasks.filter((t) => t.id !== taskId));
+    });
   };
 
   return (
@@ -131,7 +77,7 @@ const Home = () => {
               onIonChange={(e) => setNewTask(e.detail.value || "")}
             />
           </IonItem>
-          <IonButton color="success" onClick={addTask}>
+          <IonButton color="success" onClick={handleAddTask}>
             Ajouter une tâche
           </IonButton>
         </div>
@@ -144,14 +90,15 @@ const Home = () => {
                 </IonLabel>
                 <div className="button-group">
                   <IonButton
-                    onClick={() => toggleCompleted(task.id)}
+                    onClick={() => handleToggleCompleted(task.id)}
                     color="success"
                     className="ion-button"
                   >
                     {task.completed ? "Invalider" : "Valider"}
                   </IonButton>
+
                   <IonButton
-                    onClick={() => deleteTask(task.id)}
+                    onClick={() => handleDeleteTask(task.id)}
                     color="success"
                     className="ion-button"
                   >
