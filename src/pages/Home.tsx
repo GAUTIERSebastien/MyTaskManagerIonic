@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Dialog } from "@capacitor/dialog";
 import {
   IonContent,
   IonHeader,
@@ -31,7 +32,14 @@ const Home = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const handleAddTask = () => {
+  const handleAddTask = async () => {
+    if (newTask.trim() === "") {
+      await Dialog.alert({
+        title: "Entrée vide",
+        message: "Veuillez remplir le champ de tâche",
+      });
+      return;
+    }
     const task = { text: newTask, completed: false };
     addTask(task).subscribe({
       next: (newTaskFromServer) => {
