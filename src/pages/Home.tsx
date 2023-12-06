@@ -131,23 +131,34 @@ const Home = () => {
               onIonChange={(e) => setNewTask(e.detail.value || "")}
             />
           </IonItem>
-          <IonButton onClick={addTask}>Ajouter une tâche</IonButton>
+          <IonButton color="success" onClick={addTask}>
+            Ajouter une tâche
+          </IonButton>
         </div>
         <IonList>
-          {tasks.map((task, index) => (
-            <IonItemSliding key={index}>
-              <IonLabel className={task.completed ? "task-completed" : ""}>
-                {task.text}
-              </IonLabel>
-              <IonButton
-                onClick={() => toggleCompleted(task.id)}
-                color="success"
-              >
-                {task.completed ? "Invalider" : "Valider"}
-              </IonButton>
-              <IonButton onClick={() => deleteTask(task.id)} color="danger">
-                Supprimer
-              </IonButton>
+          {tasks.map((task) => (
+            <IonItemSliding key={task.id}>
+              <div className="item-sliding-wrapper">
+                <IonLabel className={task.completed ? "task-completed" : ""}>
+                  {task.text}
+                </IonLabel>
+                <div className="button-group">
+                  <IonButton
+                    onClick={() => toggleCompleted(task.id)}
+                    color="success"
+                    className="ion-button"
+                  >
+                    {task.completed ? "Invalider" : "Valider"}
+                  </IonButton>
+                  <IonButton
+                    onClick={() => deleteTask(task.id)}
+                    color="success"
+                    className="ion-button"
+                  >
+                    Supprimer
+                  </IonButton>
+                </div>
+              </div>
             </IonItemSliding>
           ))}
         </IonList>

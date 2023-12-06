@@ -5,10 +5,23 @@
 .task-input {
   display: flex;
   align-items: center;
-  justify-content: space-between;
 }
 
 .task-input .ion-item {
-  /* flex-grow: 1; */
-  margin-right: 10px;
+  flex-grow: 1;
+  margin-right: 3rem;
+}
+
+/* Aligne les éléments de la liste à l'intérieur de IonItemSliding */
+.item-sliding-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* Assure que les boutons sont alignés à droite et ont une taille fixe */
+.button-group {
+  display: flex;
+  justify-content: flex-end;
 }
