@@ -43,6 +43,4 @@ ionic serve
 - Supprimer une tâche
 - Marquer une tâche comme validée ou invalidée (observable)
 
-- Interdire l'ajout d'une tâche vide Grace au plugin:
-
-  **"Dialog" de capacitor**
+- Interdire l'ajout d'une tâche vide avec le plugin: **"Dialog"** de capacitor
