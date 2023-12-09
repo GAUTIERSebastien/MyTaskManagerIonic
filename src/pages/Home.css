@@ -20,7 +20,7 @@
   width: 100%;
 }
 
-/* Assure que les boutons sont alignés à droite et ont une taille fixe */
+/* Boutons alignés à droite et ont une taille fixe */
 .button-group {
   display: flex;
   justify-content: flex-end;

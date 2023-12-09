@@ -104,7 +104,6 @@ const Home = () => {
                   >
                     {task.completed ? "Invalider" : "Valider"}
                   </IonButton>
-
                   <IonButton
                     onClick={() => handleDeleteTask(task.id)}
                     color="success"

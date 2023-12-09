@@ -1,9 +1,24 @@
 {
   "tasks": [
     {
-      "text": "Faire la course avec Mario",
+      "text": "Descendre l'Everest en VTT",
+      "completed": true,
+      "id": 2
+    },
+    {
+      "text": "Nager avec les caïmans",
+      "completed": true,
+      "id": 3
+    },
+    {
+      "text": "Adopter un pelican",
+      "completed": true,
+      "id": 6
+    },
+    {
+      "text": "Rinçer mon poisson rouge",
       "completed": false,
-      "id": 1
+      "id": 7
     }
   ]
 }
